@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import Aux from '../../hoc/Aux';
 import Burger from '../../components/Burger/Burger';
-import BuildControls from '../../components/BuildControls/BuildControls';
+import BuildControls from '../../components/Burger/BuildControls/BuildControls';
+import Modal from '../../components/ui/Modal/Modal';
+import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 
 const INCREDIENT_PRICE = {
   meat: 1.5,
   cheese: 0.5,
-  sald: 0.8,
+  salad: 0.8,
   bacon: 0.6
 }
+const DEFAULT_BURGER_PRICE = 5;
 class BurgerBuilder extends Component {
   state = {
     ingredients : {
@@ -17,10 +20,28 @@ class BurgerBuilder extends Component {
       salad: 0,
       bacon: 0
     },
-    totalPrice: 5
+    totalPrice: DEFAULT_BURGER_PRICE,
+    purchasable: false,
+    purchasing: false
   }
 
-  addIngredientHandler (type) {
+  purchaseHandler = () => {
+    this.setState({
+      purchasing: true
+    });
+  }
+
+  cancelPurchaseHandler = () => {
+    this.setState({
+      purchasing: false
+    });
+  }
+
+  proceedPurchaseHandler = () => {
+    alert('are you ready for payment!');
+  }
+
+  addIngredientHandler = (type) => {
     const preCount = this.state.ingredients[type];
     const ingredients = {
       ...this.state.ingredients
@@ -29,11 +50,12 @@ class BurgerBuilder extends Component {
     const totalPrice = this.state.totalPrice + INCREDIENT_PRICE[type] 
     this.setState({
       ingredients,
-      totalPrice
+      totalPrice,
+      purchasable: totalPrice > DEFAULT_BURGER_PRICE
     });
   }
 
-  removeIngredientHandler (type) {    
+  removeIngredientHandler = (type) => {    
     const preCount = this.state.ingredients[type];
     if (preCount <= 0) {
       return;
@@ -42,13 +64,11 @@ class BurgerBuilder extends Component {
       ...this.state.ingredients
     };
     ingredients[type] = preCount - 1;
-    if (ingredients[type] < 0) {
-
-    }
     const totalPrice = this.state.totalPrice - INCREDIENT_PRICE[type] 
     this.setState({
       ingredients,
-      totalPrice
+      totalPrice,
+      purchasable:  totalPrice > DEFAULT_BURGER_PRICE
     });
   }
 
@@ -59,11 +79,23 @@ class BurgerBuilder extends Component {
     }, {});
     return (
       <Aux>
+        <Modal show={this.state.purchasing} modalClosed={this.cancelPurchaseHandler}>
+          <OrderSummary 
+            ingredients={this.state.ingredients} 
+            totalPrice={this.state.totalPrice} 
+            cancelOrder={this.cancelPurchaseHandler} 
+            proceedOrder={this.proceedPurchaseHandler} 
+            />
+        </Modal>
         <Burger ingredients={this.state.ingredients}/>
         <BuildControls 
-          onAddIncredients={this.addIngredientHandler.bind(this)} 
-          onRemoveIncredients={this.removeIngredientHandler.bind(this)} 
-          disabledInfo={disabledInfo}/>
+          onAddIncredients={this.addIngredientHandler} 
+          onRemoveIncredients={this.removeIngredientHandler} 
+          disabledInfo={disabledInfo} 
+          price={this.state.totalPrice} 
+          purchasable={this.state.purchasable} 
+          ordered={this.purchaseHandler} 
+          />
       </Aux>
     )
   }
