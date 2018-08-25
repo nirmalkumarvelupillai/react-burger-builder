@@ -1,7 +1,7 @@
 import React from 'react';
 import classes from './BuildControls.css';
 import BuildControl from './BuildControl/BuildControl';
-
+import Button from '../../ui/Button/Button';
 const controls = [
   {type: 'meat', label: 'Meat'},
   {type: 'cheese', label: 'Cheese'},
@@ -21,10 +21,10 @@ const buildControls = (props) => {
           removed={props.onRemoveIncredients} 
           disabled={props.disabledInfo[control.type]}/>
       )) }
-      <button 
-        className={classes.OrderButton} 
-        onClick={props.ordered}
-        disabled={!props.purchasable}>ORDER NOW</button>
+      <Button 
+        btnType="Orange" 
+        clicked={props.ordered}
+        disabled={!props.purchasable}>ORDER NOW</Button>
     </div>
   );
 }

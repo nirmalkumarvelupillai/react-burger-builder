@@ -1,8 +1,6 @@
 .Button {
   position: relative;
-
   display: inline-block;
-  margin: 30px auto;
   padding: 0;
   cursor: pointer;
   overflow: hidden;
@@ -76,4 +74,25 @@
 
 .Button.Danger:hover, .Button.Danger:focus {
   background-color: #c0392b;
+}
+
+.Button.Orange {
+  background-color: #df8704;
+}
+
+.Button.Orange:hover, .Button.Orange:focus {
+  background-color: #c96d05;
+}
+
+.Button:disabled, .Button:disabled:hover {
+  background-color: rgb(182, 180, 180);
+  cursor: not-allowed;
+}
+.Button:disabled:hover {
+  background-color: rgb(182, 180, 180);
+  cursor: not-allowed;
+}
+
+.Button:disabled::before {
+  display: none;
 }
